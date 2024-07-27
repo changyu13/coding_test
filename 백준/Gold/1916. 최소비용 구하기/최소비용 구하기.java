@@ -76,8 +76,8 @@ public class Main {
                 visited[currEnd] = true;
 
                 for(Bus b : busMap[currEnd]){
-                    if(!visited[b.arrive]&& dist[b.arrive]>dist[currEnd]+b.weight){
-                        dist[b.arrive]=dist[currEnd]+b.weight;
+                    if (!visited[b.arrive] && dist[b.arrive] > currBus.weight + b.weight) {
+                        dist[b.arrive] = currBus.weight + b.weight;
                         que.offer(new Bus(b.arrive, dist[b.arrive]));
                     }
                 }
