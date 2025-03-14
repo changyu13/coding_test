@@ -1,59 +1,48 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Main {
     public static void main(String[] args) {
-           try{
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                Stack<Character> stack = new Stack<>();
-                while(true){
-                    String input= br.readLine();
-                    boolean ise = false;
-                    if(input.equals(".")){
-                        break;
-                    }
-                    else{
-                        for(int i=0;i<input.length();i++){
-                            if(input.charAt(i)=='[' || input.charAt(i)=='('){
-                                stack.push(input.charAt(i));
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String s;
+            Stack<Character> stack = new Stack<Character>();
+            ArrayList<String> list = new ArrayList<>();
+            while(true){
+                stack.clear();
+                s = br.readLine();
+                if(s.equals(".")==true){
+                    break;
+                }else{
+                    String answer = "yes";
+                    for(int i=0; i<s.length();i++){
+                        if(s.charAt(i)=='[' || s.charAt(i)=='('){
+                            stack.push(s.charAt(i));
+                        }else if(s.charAt(i)==')'){
+                            if(stack.size()==0 || stack.pop()!='('){
+                                answer="no";
+                                break;
                             }
-                            else if(input.charAt(i)==']'){
-                                if(stack.size()==0){
-                                   ise= true;
-                                   break;
-                                }
-                                else if(stack.pop()=='('){
-                                    ise=true;
-                                    break;
-                                }
+                        } else if(s.charAt(i)==']'){
+                            if(stack.size()==0 ||stack.pop()!='[') {
+                                answer = "no";
+                                break;
                             }
-                            else if(input.charAt(i)==')'){
-                                if(stack.size()==0){
-                                   ise= true;
-                                   break;
-                                }
-                                else if(stack.pop()=='['){
-                                    ise=true;
-                                    break;
-                                }
-                            }
-                        }
-                        if(stack.size()==0){
-                            if(ise==true){
-                                System.out.println("no");
-                                continue;
-                            }
-                            System.out.println("yes");
-                        }
-                        else{
-                            stack.clear();
-                            System.out.println("no");
                         }
                     }
+                    if(stack.size()!=0){
+                        answer="no";
+                    }
+                    list.add(answer);
                 }
-            }catch(IOException e){
-                e.getMessage();
-                e.printStackTrace();
             }
+            for(int i=0; i<list.size();i++){
+                System.out.println(list.get(i));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
 }
