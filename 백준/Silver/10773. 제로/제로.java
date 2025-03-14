@@ -1,30 +1,27 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Stack;
-public class Main{
-    public static void main(String args[]){
-     try{
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+public class Main {
+    public static void main(String[] args) {
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            int n = Integer.parseInt(br.readLine());
+            int sum = 0;
+            Stack<Integer> stack = new Stack<>();
+            for(int i=0; i<n; i++){
                 int num = Integer.parseInt(br.readLine());
-                int sum=0;
-                Stack<Integer> stack = new Stack<>();
-                for(int i=0; i<num;i++){
-                    int a = Integer.parseInt(br.readLine());
-                    if(a==0){
-                        stack.pop();
-                        continue;
-                    }
-                    stack.push(a); 
+                if(num!=0){
+                    sum += stack.push(num);
+                }else{
+                    sum -= stack.pop();
                 }
-                //stack을 pop 해주면 stack.size()수가 바뀐다.
-                int size = stack.size();
-                for(int j=0;j<size;j++){
-                    sum += stack.pop();
-                }
-                System.out.println(sum);
-                
-            }catch(IOException e){
-                e.printStackTrace();
-                e.getMessage();
-            }       
+            }
+            System.out.println(sum);
+        }catch(IOException e){
+            e.getMessage();
+            e.printStackTrace();
+        }
     }
 }
