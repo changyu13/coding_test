@@ -1,129 +1,96 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class Main{
-    public static ArrayList<Integer> al;
-    public static void mergeSort(ArrayList<Integer> a){
-        al = new ArrayList<Integer>(Collections.nCopies(a.size(),0));
-        mergeSort(a,0,a.size()-1);
-        al.clear();
-    }
-    public static void mergeSort(ArrayList<Integer> a,int left,int right){
+public class Main {
+    public static ArrayList<Integer> sorted;
+    public static void mergeSort(ArrayList<Integer> list, int left, int right){
         if(left==right) return;
         int mid = (left+right)/2;
-        mergeSort(a,left,mid);
-        mergeSort(a,mid+1,right);
-        merge(a,left,mid,right);
+        mergeSort(list,left,mid);
+        mergeSort(list,mid+1,right);
+        merge(list,left,mid,right);
     }
-    public static void merge(ArrayList<Integer> a, int left,int mid, int right){
+    public static void merge(ArrayList<Integer> list, int left, int mid, int right){
         int l = left;
-        int r = mid+1;
-        int idx = left;
-        while(l<= mid && r<=right){
-            if(a.get(l)<=a.get(r)){
-                al.set(idx,a.get(l));
+        int r= mid+1;
+        int index = left;
+        while(l <= mid && r <= right){
+            if(list.get(l)<=list.get(r)){
+                sorted.set(index,list.get(l));
                 l++;
-                idx++;
+                index++;
             }
             else{
-                al.set(idx,a.get(r));
+                sorted.set(index,list.get(r));
                 r++;
-                idx++;
+                index++;
             }
         }
         if(l>mid){
             while(r<=right){
-                al.set(idx,a.get(r));
+                sorted.set(index, list.get(r));
                 r++;
-                idx++;
+                index++;
             }
-        }
-        else{
+        }else{
             while(l<=mid){
-                al.set(idx,a.get(l));
+                sorted.set(index, list.get(l));
                 l++;
-                idx++;
+                index++;
             }
         }
-        for(int i=left;i<=right;i++){
-            a.set(i,al.get(i));
+        for(int i = left; i<=right; i++){
+            list.set(i,sorted.get(i));
         }
     }
-    public static void main(String[] args){
+    public static void main(String[] args) {
         try{
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                int num = Integer.parseInt(br.readLine());
-                long sum =0;
-                int max=0;
-                int minus=0;
-                int count_s = 0;
-                int camp = 0;
-                ArrayList<Integer> list = new ArrayList<>();
-                HashMap<Integer,Integer> map = new HashMap<>();
-                ArrayList<Integer> least = new ArrayList<>();
-                for(int i=0; i<num; i++){
-                    int k = Integer.parseInt(br.readLine());
-                    sum += k;
-                    list.add(k);
-                }
-                mergeSort(list);
-                for(int j=0;j<num;j++){
-                    int l =list.get(j);
-                    map.put(l,map.getOrDefault(l,0)+1);
-                }
-                for(Integer key: map.keySet()){
-                    if(max==map.get(key)){
-                        least.add(key);
-                        camp=key;
-                        count_s++;
-                    }
-                    else if(max<map.get(key)){
-                        count_s=1;
-                        least=new ArrayList<Integer>(); 
-                        least.add(key);
-                        max= map.get(key);
-                        camp=key;
-                    }
-                }
-                mergeSort(least);
-                minus = list.get(list.size()-1)-list.get(0);
-                double average = (double)sum/list.size();
-                System.out.println((int)Math.round(average));
-                System.out.println((int)list.get(list.size()/2));
-                int test=0;
-                if(count_s>=2){
-                    System.out.println(least.get(1));
-                    /*
-                    int count =0;
-                    if(least.get(0)==least.get(1)){
-                        
-                    }
-                    while(true){
-                        if (camp ==least.get(test)){
-                            test++;
-                            continue;
-                        }
-                        else{
-                            camp=least.get(test);
-                            test++;
-                            count++;
-                        }
-                        if(count==2){
-                            break;
-                        }
-                    }
-                    System.out.println(camp);
-                    */
-                }
-                else{
-                    System.out.println(least.get(0));
-                }
-                System.out.println(minus);
-            }catch(IOException e){
-                e.getMessage();
-                e.printStackTrace();
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            int num = Integer.parseInt(br.readLine());
+            int sum = 0;
+            ArrayList<Integer> list = new ArrayList<>();
+            int now;
+            HashMap<Integer,Integer> map = new HashMap<>();
+            ArrayList<Integer> mode_list = new ArrayList<>();
+            for(int i=0; i<num; i++){
+                now = Integer.parseInt(br.readLine());
+                list.add(now);
+                map.put(now,map.getOrDefault(now,0)+1);
+                sum += now;
             }
+
+            sorted = new ArrayList<>(Collections.nCopies(list.size(),0));
+            mergeSort(list,0,num-1);
+            sorted.clear();
+
+            //최빈값 찾기
+            int mode=0;
+            for(Integer n : map.keySet()){
+                if(map.get(n)>mode){
+                    mode_list= new ArrayList<>();
+                    mode = map.get(n);
+                    mode_list.add(n);
+                }else if(map.get(n)==mode){
+                    mode_list.add(n);
+                }
+            }
+            System.out.println(Math.round((double)sum/num));
+            System.out.println(list.get(list.size()/2));
+            if(mode_list.size()==1){
+                System.out.println(mode_list.get(0));
+            }else{
+                sorted = new ArrayList<>(Collections.nCopies(mode_list.size(),0));
+                mergeSort(mode_list,0,mode_list.size()-1);
+                System.out.println(mode_list.get(1));
+            }
+            System.out.println(list.get(list.size()-1)-list.get(0));
+        }catch(IOException e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
     }
 }
